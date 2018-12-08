@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign up</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style type="text/css">
+  	div {
+  		margin: 0 auto;
+  		width: 600px;
+      	border-radius: 5px;
+      	background-color: #f2f2f2;
+      	padding: 95px;
+  	}
+
+   	input[type=text], select {
+      	width: 400px;
+      	padding: 10px 20px;
+      	margin: 10px 0;
+      	display: inline-block;
+      	border: 1px solid #ccc;
+      	border-radius: 5px;
+      	box-sizing: border-box;
+  	}
+
+  	input[name=myFirstname], select {
+      	width: 195px;
+      	padding: 10px 20px;
+      	margin: 10px 0;
+      	display: inline-block;
+      	border: 1px solid #ccc;
+      	border-radius: 5px;
+      	box-sizing: border-box;
+  	}
+
+  	input[name=myLastname], select {
+      	width: 200px;
+      	padding: 10px 20px;
+      	margin: 10px 0;
+      	display: inline-block;
+      	border: 1px solid #ccc;
+      	border-radius: 5px;
+      	box-sizing: border-box;
+  	}
+
+  	input[type=password], select {
+      	width: 400px;
+      	padding: 10px 20px;
+      	margin: 10px 0;
+      	display: inline-block;
+      	border: 1px solid #ccc;
+      	border-radius: 5px;
+      	box-sizing: border-box;
+  	}
+
+  	button[type=submit] {
+      	width: 100px;
+      	background-color: #328cc1;
+      	color: white;
+      	text-align: center;
+      	padding: 15px 20px;
+      	border: none;
+      	margin: 20px 2px;
+      	border-radius: 20px;
+      	cursor: pointer;
+  	}
+
+  	button[type=submit]:hover {
+      	background-color: #0b3c5d;
+  	}
+
+  </style>
+</head>
+<body>
+  <div>
+  	<h1>Sign Up</h1>
+  	<%if (message != null) { %>
+  	<font color="red"><%= message %><p>
+  	<% } %>
+  	<form method="POST">
+  		<input type="text" name="firstname" placeholder="First name">
+  		<input type="text" name="lastname" placeholder="Last name"> <br>
+  		<input type="text" name="email" placeholder="Email"> <br>
+    	<input type="text" name="username" placeholder="Username"> <br>
+    	<input type="password" name="password" placeholder="Password"> <br>
+    	<button type="submit">Sign Up</button><br>
+    	Return to <a href="/">Login</a>
+  	</form>
+  </div>
+</body>
+</html>

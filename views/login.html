@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Log in</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style type="text/css">
+    body {
+     	padding-top: 40px;
+     	padding-bottom: 40px;
+     	background-color: white;
+    }
+
+    .login-box {
+      max-width: 330px;
+     	height: 30px;
+     	margin: 0 auto;
+    }
+
+    input[type=text], select {
+      width: 400px;
+      padding: 10px 20px;
+      margin: 10px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    input[type=password], select {
+      width: 400px;
+      padding: 10px 20px;
+      margin: 10px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    button[type=submit] {
+      width: 100px;
+      background-color: #000000;
+      color: white;
+      text-align: center;
+      padding: 15px 20px;
+      border: none;
+      margin: 20px 2px;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    button[type=submit]:hover {
+      background-color: #0b3c5d;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+  	<h1>MySpot</h1>
+  	<%if (message != null) { %>
+  	<font color="red"><%= message %><p>
+  	<% } %>
+  	<form action="/checklogin" method="post">
+    	<input type="text" class="form-control" name="userName" placeholder="Username"> <br>
+    	<input type="password" class="form-control" name="userPassword" placeholder="Password"> <br>
+    	<button type="submit">Log in</button><br>
+    	<font color="black">Not a user? <a href="account/signup">Sign up now!</a>
+  	</form>
+  </div>
+</body>
+</html>
