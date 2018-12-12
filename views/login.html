@@ -57,14 +57,14 @@
 <body>
   <div class="login-box">
   	<h1>MySpot</h1>
-  	<%if (message != null) { %>
-  	<font color="red"><%= message %><p>
-  	<% } %>
-  	<form action="/checklogin" method="post">
+    <%if (message !== null) { %>
+      <hl> <font color="red"><%= message %></font></hl><p></p>
+    <% } %>
+  	<form action="/" method="POST">
     	<input type="text" class="form-control" name="userName" placeholder="Username"> <br>
     	<input type="password" class="form-control" name="userPassword" placeholder="Password"> <br>
     	<button type="submit">Log in</button><br>
-    	<font color="black">Not a user? <a href="account/signup">Sign up now!</a>
+    	<font color="black">Not a user? <a href="/account/signup">Sign up</a>
   	</form>
   </div>
 </body>

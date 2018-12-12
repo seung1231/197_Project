@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Home</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style type="text/css">
+    .header {
+      background-color: #fbfbfb;
+    	padding: 8px;
+    	text-align: left;
+    	font-size: 18px;
+    	color: white;
+    }
+
+    input[name=searchField], select {
+      width: 300px;
+    	font-size: 15px;
+    	color: black;
+    	border-radius: 10px;
+    	position: absolute;
+    	left: 350px;
+    	top: 5px;
+    }
+
+    button[id=logout] {
+    	width: auto;
+    	background-color: #ffffff;
+    	color: black;
+    	font-size: 15px;
+    	text-align: center;
+    	border-radius: 5px;
+    	cursor: pointer;
+    	position: absolute;
+    	right: 10px;
+    	top: 5px;
+	  }
+
+    div.left {
+      display: block;
+      position: fixed;
+      text-align: left;
+      top: 50px;
+      left: 5px;
+      height: 500px;
+      width: 20%;
+      border: none;
+      background-color: #ffffff;
+      color: black;
+    }
+
+    .left img {
+		  max-width: 99%;
+		  height: 150px;
+		  display: block;
+      margin-left: auto;
+      margin-right: auto;
+		  border: 2px solid #ccc;
+	  }
+
+    button[id=edit] {
+		position: fixed;
+    top: 580px;
+		font-size: 14px;
+		width: auto;
+    background-color: #ffffff;
+    color: black;
+    text-align: center;
+    border-radius: 10px;
+    cursor: pointer;
+	  }
+
+	  button[id=edit]:hover {
+    	background-color: #cccccc;
+	  }
+
+    button[id=follow] {
+		position: fixed;
+    top: 580px;
+		font-size: 14px;
+		width: auto;
+    background-color: #ffffff;
+    color: black;
+    text-align: center;
+    border-radius: 10px;
+    cursor: pointer;
+	  }
+
+    button[id=follow]:hover {
+    	background-color: #cccccc;
+	  }
+
+    div.middle {
+      position: fixed;
+      width: 60%;
+      top: 50px;
+      left: 20%;
+      height: 500px;
+      border: none;
+    }
+
+    div.right {
+      display: block;
+      position: fixed;
+      width: 20%;
+      top: 50px;
+      right: 5px;
+      height: 500px;
+      border: none;
+      color: black;
+    }
+
+    .form-popup {
+  		display: none;
+  		position: fixed;
+  		top: 250px;
+  		left: 5px;
+  		border: 2px solid #f1f1f1;
+	  }
+
+	  .form-container {
+  		max-width: 175px;
+  		padding: 2px;
+  		background-color: white;
+      font-size: 15px;
+	  }
+
+	  .form-container input[type=text] {
+  		width: 100%;
+  		padding: 10px;
+  		margin: 2px 0 10px 0;
+  		border: none;
+  		background: #f1f1f1;
+	  }
+
+	  .form-container .btn {
+  		background-color: #0b3c5d;
+  		color: white;
+  		padding: 4px 6px;
+  		border: none;
+  		cursor: pointer;
+  		margin-bottom: 5px;
+	  }
+
+	  .form-container .cancel {
+  		background-color: #8c8c8c;
+	  }
+
+  </style>
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyBzQXaolZrnI8W3Ub4QcCZX573OO1PrHOw"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    var map, currUser, pageOwner;
+    var markers = [];
+
+    // Get page owner
+    var getOwner = $.get('/getowner', function(owner) {
+      pageOwner = owner;
+    });
+
+    // Get current user
+    var getUser = $.get('/getuser', function(sessionUser) {
+	    currUser = sessionUser;
+	  });
+
+    // Edit Profile
+    function openForm() {
+      document.getElementById("editForm").style.display = "block";
+    }
+
+    function closeForm() {
+      document.getElementById("editForm").style.display = "none";
+    }
+
+    function editProfile() {
+      var edit = {
+        url: document.getElementById("newURL").value,
+			  status: document.getElementById("newStatus").value,
+      }
+
+      $.post('/account/editprofile', edit, function(data) {
+        closeForm();
+      });
+    }
+
+    // follow user
+    function follow() {
+      $.post('/account/follow', { username: pageOwner }, function (data) {
+        if (data === 'error') {
+  	      alert("Follow Error");
+  	    } else {
+  	      console.log('Successfully followed user!');
+  	    }
+      });
+    }
+
+//     // search
+//     function liveSearch(input) {
+//       $('#result').html('');
+//       $.get('/account/search', function(elements) {
+//         elements.forEach(function(element) {
+//           if (input.length == 0) {
+//             $('#result').html('');
+//           } else if (element.startsWith(input)) {
+//             $('#result').append('<li class="list-group-item"><font size="3"><a href="/home/'+element+'">'+element+'</a></font></li>');
+//           }
+//         });
+//       });
+//     }
+
+    // Load Map
+    var loadMap = function() {
+      var myOptions = {
+          center: new google.maps.LatLng(39.952335, -75.163789),
+          zoom: 14,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+      map = new google.maps.Map(document.getElementById("map"), myOptions);
+
+	    // Add lat and long to input field
+  	  google.maps.event.addListener(map, 'click', function(event) {
+  	    document.getElementById("latitude").value = event.latLng.lat();
+  	    document.getElementById("longitude").value = event.latLng.lng();
+  	  });
+
+  	  // Show all markers
+  	  showMyMarkers();
+    };
+
+  	// Show my spots on map
+  	function showMyMarkers() {
+  	  $.post('/map/showmyspots', { username: pageOwner }, function(data) {
+  	    data.forEach(function(location) {
+          var spot = location.name;
+          var creator = location.owner;
+          var category = location.category;
+  	      var rev = location.description;
+  	      var lat = location.latitude;
+  	      var long = location.longitude;
+  	      var myLatLng = new google.maps.LatLng(lat, long);
+  	      initMarker(myLatLng, spot, category, rev, creator);
+  	    });
+  	  });
+  	};
+
+    // Show all spots on map
+  	// function showAllMarkers() {
+  	//   $.get('/map/showallspots', function(data) {
+  	//     data.forEach(function(location) {
+    //       var spot = location.name;
+    //       var creator = location.owner;
+    //       var category = location.category;
+  	//       var rev = location.description;
+  	//       var lat = location.latitude;
+  	//       var long = location.longitude;
+  	//       var myLatLng = new google.maps.LatLng(lat, long);
+  	//       initMarker(myLatLng, spot, category, rev, creator);
+  	//     });
+  	//   });
+  	// };
+
+  	// Initialize marker
+  	function initMarker(pos, name, cat, rev, crt) {
+  	  var marker = new google.maps.Marker({
+  	    position: pos,
+  	    title: name
+  	  });
+  	  if (currUser !== crt) {
+  	    marker.setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png');
+  	  }
+  	  marker.setMap(map);
+  	  markers.push(marker);
+  	  marker['infowindow'] = new google.maps.InfoWindow({
+  	    content: "<b>"+"Spot: "+name+"</b><br>"+"Category: "+cat+"</b><br>"
+        +"Comments: "+rev+"<br><i>Added by: "+crt+"</i>"
+  	  });
+  	  google.maps.event.addListener(marker, 'click', function() {
+  	    this['infowindow'].open(map, this);
+  	  });
+  	  google.maps.event.addListener(marker, 'rightclick', function() {
+  	    if (currUser == crt) {
+  	      deleteMarker(name);
+  	      marker.setMap(null);
+  	    } else {
+  	      alert('You cannot delete this marker');
+  	    }
+  	  });
+  	};
+
+  	// Add a spot
+  	function addMarker() {
+  	  var newMarker = {
+        spot: document.getElementById("spot").value,
+        category: document.getElementById("category").value,
+        review: document.getElementById("review").value,
+  	    latitude: document.getElementById("latitude").value,
+  	    longitude: document.getElementById("longitude").value
+  	  };
+
+  	  $.post('/map/addspot', newMarker, function(data) {
+  	    // Reset inputs
+  	    document.getElementById("latitude").value = "";
+  	    document.getElementById("longitude").value = "";
+  	    document.getElementById("spot").value = "";
+  	    document.getElementById("review").value = "";
+        document.getElementById("category").value = "";
+
+  	    if (data === 'error') {
+  	      alert('Error in adding a new spot');
+  	    } else {
+  	      // Add marker on map
+  	      var latlng = new google.maps.LatLng(newMarker.latitude, newMarker.longitude);
+  	      initMarker(latlng, newMarker.spot, newMarker.category, newMarker.review, currUser);
+  	    }
+  	  });
+  	};
+
+  	// Delete spot
+  	function deleteMarker(spotName) {
+  	  $.post('/map/deletespot', { name: spotName }, function(data) {
+  	    if (data === 'error') {
+  	      alert("Delete Error");
+  	    } else {
+  	      console.log('Successfully deleted!');
+  	    }
+  	  });
+  	};
+
+  	// Refresh time
+  	var refresh = function() {
+  	  for (var i = 0; i < markers.length; i++) {
+  	    markers[i].setMap(null);
+  	  }
+  	  showMyMarkers();
+  	  setTimeout(refresh, 10000);
+  	};
+  	$(document).ready(function() {
+  	  setTimeout(refresh, 10000);
+  	});
+
+	  // Load map on browser
+	  window.onload = loadMap;
+  </script>
+</head>
+<body>
+  <div class="header">
+    <a href="/home"><font color="black"><strong>MySpot</strong></font></a>
+    <input type="text" name="searchField" onkeyup="liveSearch(this.value)" placeholder="  Find a friend">
+    <div class="listbox"><ul class="list-group" id="result"></ul></div>
+    <form action="/" method="get">
+      <button type="submit" id="logout">Log Out</button>
+    </form>
+  </div>
+
+  <div class="left">
+  	<img src=<%=info.picture%>><br>
+    <font size="3"><strong><%= info.fullname %></strong></font><br><br>
+    <% if (other === 'no') { %>
+      <button type="button" id="follow" onclick="follow()">Follow</button></br>
+    <% } %>
+      <strong>Status:</strong><br>
+      <%= info.status %><br>
+    <% if (other === null) { %>
+  	  <button type="submit" id="edit" onclick="openForm()">Edit</button><br>
+      <div class="form-popup" id="editForm">
+  			<div class="form-container">
+    		<h2><font color="black">Edit Profile</h2>
+
+    		Profile Picture (URL)<br> <input type="text" id="newURL" placeholder="Enter Image URL">
+				Status<br> <input type="text" id="newStatus" placeholder="Add New Status">
+
+    		<button type="submit" class="btn" onclick="editProfile()">Update</button>
+    		<button type="submit" class="btn cancel" onclick="closeForm()">Cancel</button></font>
+  		  </div>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="middle">
+    <div id="map" style="width:500px; height:500px; margin:0 auto"></div><br/>
+  </div>
+
+  <div class="right">
+    <% if (other === null) { %>
+      <button type="button" onClick="showMyMarkers()">MySpots</button><p></p>
+      <button type="button" onClick="showAllMarkers()">FollowSpots</button><p></p><br/>
+      Spot Name: <br/>
+      <input type="text" id="spot"> <br/>
+      Category: <br/>
+      <input type="text" id="category"> <br/>
+      Description/Review: <br/>
+      <input type="text" id="review"> <br/>
+      Latitude: <br/>
+      <input type="text" id="latitude"> <br/>
+      Longitude: <br/>
+      <input type="text" id="longitude"> <br/><br/>
+      <button type="submit" onClick="addMarker()">Add MySpot</button><p></p>
+      </form>
+    <% } %>
+  </div>
+</body>
+</html>
