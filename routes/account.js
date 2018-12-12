@@ -76,7 +76,7 @@ router.post('/follow', function (req, res) {
   var user = req.session.user;
   var owner = req.body.username;
   console.log(user + ' ' + owner);
-  Users.updateOne({ username: user }, { $push: { follow: { $each: [ { username: owner } ] } } },
+  User.updateOne({ username: user }, { $push: { follow: { $each: [ { username: owner } ] } } },
     function (err, result) {
       if (err) {
         next(new Error('Follow error'));
@@ -86,6 +86,7 @@ router.post('/follow', function (req, res) {
             next(new Error('Error loading spots'));
           } else if (results) {
             var spots = results.locations;
+            console.log(spots);
             User.updateOne({ username: user }), { $push: { locations: { $each: spots } } },
               function(err, result) {
                 if (err) {
@@ -102,27 +103,16 @@ router.post('/follow', function (req, res) {
   });
 });
 
-// router.get('/search', function (req, res) {
-//   var list = [];
-//   Users.find({ fullname: * }, function (err, result) {
-//     if (result) {
-//       console.log(result);
-//       async.each(result, function(element, callback) {
-//         console.log(element);
-//         list.push(element);
-//         callback();
-//       }, function(err) {
-//         if (err) {
-//           res.send('error');
-//         }
-//       });
-//       console.log(list);
-//       res.send(list);
-//     } else {
-//       res.send(null);
-//     }
-//   })
-// })
+router.post('/search', function (req, res) {
+  var name = req.body.searchField;
+  User.findOne({ fullname: name }, function (err, result) {
+    if (result) {
+      res.redirect('/home/' + result.username);
+    } else {
+      res.send(null);
+    }
+  });
+});
 
 // Log Out
 router.get('/logout', isAuthenticated, function (req, res, next) {

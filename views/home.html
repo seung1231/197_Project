@@ -36,11 +36,24 @@
     	top: 5px;
 	  }
 
+    button[id=search] {
+    	width: auto;
+    	background-color: #ffffff;
+    	color: black;
+    	font-size: 15px;
+    	text-align: center;
+    	border-radius: 5px;
+    	cursor: pointer;
+    	position: fixed;
+    	right: 240px;
+    	top: 5px;
+	  }
+
     div.left {
       display: block;
       position: fixed;
       text-align: left;
-      top: 50px;
+      top: 60px;
       left: 5px;
       height: 500px;
       width: 20%;
@@ -93,7 +106,7 @@
     div.middle {
       position: fixed;
       width: 60%;
-      top: 50px;
+      top: 60px;
       left: 20%;
       height: 500px;
       border: none;
@@ -103,7 +116,7 @@
       display: block;
       position: fixed;
       width: 20%;
-      top: 50px;
+      top: 60px;
       right: 5px;
       height: 500px;
       border: none;
@@ -193,20 +206,6 @@
   	    }
       });
     }
-
-//     // search
-//     function liveSearch(input) {
-//       $('#result').html('');
-//       $.get('/account/search', function(elements) {
-//         elements.forEach(function(element) {
-//           if (input.length == 0) {
-//             $('#result').html('');
-//           } else if (element.startsWith(input)) {
-//             $('#result').append('<li class="list-group-item"><font size="3"><a href="/home/'+element+'">'+element+'</a></font></li>');
-//           }
-//         });
-//       });
-//     }
 
     // Load Map
     var loadMap = function() {
@@ -345,8 +344,10 @@
 <body>
   <div class="header">
     <a href="/home"><font color="black"><strong>MySpot</strong></font></a>
-    <input type="text" name="searchField" onkeyup="liveSearch(this.value)" placeholder="  Find a friend">
-    <div class="listbox"><ul class="list-group" id="result"></ul></div>
+    <form action="/account/search" method="POST">
+    <input type="text" name="searchField" id="searchField" placeholder="  Find a friend">
+    <button type="submit" id="search">Search</button>
+    </form>
     <form action="/" method="get">
       <button type="submit" id="logout">Log Out</button>
     </form>
